@@ -22,14 +22,11 @@
 
   <body>
     <h1>readOTP</h1>
-    Please Enter OTP :
-    <input
-      type="text"
-      id="txt1"
-      width="100"
-      height="500"
-      placeholder="Enter OTP"
-    />
-
+   
+    <form>
+      Enter OTP here:
+      <input type="text" autocomplete="one-time-code" inputmode="numeric" name="one-time-code">
+      <input type="submit" value="Submit">
+    </form>
   </body>
 </html>

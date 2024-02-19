@@ -2,27 +2,37 @@ window.addEventListener("load", function () {
   console.log("loading for OTP!");
 });
 
-var cursor = navigator.mozMobileMessage.getMessages();
+// Detect feature support via OTPCredential availability
+if ("OTPCredential" in window) {
+  window.addEventListener("DOMContentLoaded", (e) => {
+    const input = document.querySelector('input[autocomplete="one-time-code"]');
+    if (!input) return;
+    // Set up an AbortController to use with the OTP request
+    const ac = new AbortController();
+    const form = input.closest("form");
+    if (form) {
+      // Abort the OTP request if the user attempts to submit the form manually
+      form.addEventListener("submit", (e) => {
+        ac.abort();
+      });
+    }
+    // Request the OTP via get()
+    navigator.credentials
+      .get({
+        otp: { transport: ["sms"] },
+        signal: ac.signal,
+      })
+      .then((otp) => {
+        // When the OTP is received by the app client, enter it into the form
+        // input and submit the form automatically
+        input.value = otp.code;
+        if (form) form.submit();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
+}
 
-navigator.mozMobileMessage.addEventListener("received", function (msg) {
-  //sms received format: Hi, OTP is: 123456
-  //you can write your own logic here to read the opt based on the sms format
-  console.log("received");
-  console.log(msg);
-  var message = msg.message;
-  console.log("message - " + message);
-  console.log("message id - " + message.id);
-  //   document.getElementById("p1").innerHTML = "ID : "+message.id;
-  console.log("message sender - " + message.sender);
-  //   document.getElementById("p2").innerHTML = "SENDER : "+message.sender;
-  console.log("message body - " + message.body);
 
-  //    var notification = new Notification(message.sender, { body: message.body });
-  //   document.getElementById("p3").innerHTML = "BODY : "+message.body;
-  var str = message.body;
-  var n = str.search("OTP is");
-  console.log("n - " + n);
-  var OTP = str.slice(n + 8, n + 14);
-  console.log(OTP);
-  document.getElementById("txt1").value = OTP;
-});
+

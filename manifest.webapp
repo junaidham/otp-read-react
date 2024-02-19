@@ -1,5 +1,5 @@
 	{
-  "name": "OTP certified",
+  "name": "OTP web",
   "description": "Demo app for auto read OTP",
   "launch_path": "/index.html",
   "icons": {
@@ -8,7 +8,7 @@
     "60": "/icons/icon60x60.png",
     "128": "/icons/icon128x128.png"
   },
-      "type": "certified",
+      "type": "web",
       "permissions":{
 
             "sms":{}
